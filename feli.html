@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños</title>
+<style>
+*{box-sizing:border-box}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url('dalia.jpg') no-repeat center center;
+  background-size: cover;
+  filter: blur(8px) brightness(0.6);
+  z-index: -2;
+}
+
+.overlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeIn 2s ease forwards;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: auto;
+  text-align: left;
+  opacity: 0;
+  animation: fadeIn 3s ease forwards;
+  animation-delay: 1s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* 🌸 DALIAS MEJORADAS (SVG EMBEBIDO PARA QUE NO FALLE) */
+.dalia {
+  position: fixed;
+  top: -60px;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  animation: caer linear forwards;
+}
+
+.dalia::before {
+  content: "🌸"; /* emoji estable, no se rompe */
+  font-size: 28px;
+  display: block;
+}
+
+@keyframes caer {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50vh) translateX(40px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(110vh) translateX(-40px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  h1 { font-size: 3rem; }
+  p { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+  <h1>Feliz cumpleaños, Dalia 🤍</h1>
+  <p id="texto"></p>
+</div>
+
+<audio id="musica" loop>
+  <source src="dalia.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ✨ TEXTO EFECTO ESCRITURA
+const mensaje = `Buenos días, mi amor.
+
+Hoy es tu cumpleaños… y de verdad no sabía por dónde empezar, porque siento que todo lo que quiero decir se me queda corto para lo que significas para mí.
+
+He estado pensando mucho en nosotros, en todo lo que hemos vivido, en cada conversación, en cada tontería que nos decimos, en cada “dxdxd” que parece simple pero que en realidad tiene tanto de nosotros. Y es que contigo todo se siente diferente… incluso lo más cotidiano se vuelve especial.
+
+Me encanta cómo eres, en todas tus versiones. Cuando eres seria, cuando eres sarcástica, cuando me sigues el juego, cuando te haces la dura, cuando te ríes de mis tonterías, incluso cuando reniegas. Todo eso eres tú… y todo eso es lo que me gusta.
+
+A veces no te das cuenta, pero en los pequeños detalles es donde más te siento cerca. En cómo me preguntas cómo me fue, en cómo compartes cosas de tu día, en cómo estás ahí incluso sin darte cuenta. Y yo… yo me quedo con todo eso.
+
+No somos perfectos, lo sé. Hemos tenido momentos complicados, dudas, cosas que han dolido… pero aún así, aquí estamos. Y eso, para mí, vale muchísimo. Porque quedarse, intentar, seguir… no es fácil. Y tú lo haces.
+
+Hoy, en tu día, solo quiero que sepas que deseo que seas feliz. Pero feliz de verdad… no solo hoy, sino todos los días. Que consigas todo lo que quieres, que cumplas tus metas, que te vaya bien en todo lo que te propongas, porque te lo mereces.
+
+Y también quiero que sepas algo… que contigo he aprendido muchas cosas. A querer de otra forma, a tener paciencia, a valorar más los momentos, a no dar por sentado lo que siento. Y eso no es poca cosa.
+
+No sé qué pasará más adelante, no sé cómo será todo en el futuro… pero sí sé algo: lo que siento por ti es real. Y hoy, en tu cumpleaños, no quería guardármelo.
+
+Gracias por ser tú. Por quedarte. Por existir en mi vida.
+
+Feliz cumpleaños, Dalia 🤍 `;
+
+const contenedor = document.getElementById('texto');
+let i = 0;
+
+function escribir() {
+  if (i < mensaje.length) {
+    const char = mensaje.charAt(i);
+    contenedor.innerHTML += char === '\n' ? '<br>' : char;
+    i++;
+    setTimeout(escribir, 25);
+  }
+}
+
+// 🌸 DALIAS LENTAS Y SUAVES
+function crearDalia(x = null) {
+  const d = document.createElement('div');
+  d.className = 'dalia';
+
+  const left = x !== null ? x : Math.random() * 100;
+  d.style.left = left + 'vw';
+
+  const size = 22 + Math.random() * 20;
+  d.style.fontSize = size + 'px';
+
+  const duration = 10 + Math.random() * 8; // MÁS LENTO
+  d.style.animationDuration = duration + 's';
+
+  document.body.appendChild(d);
+
+  setTimeout(() => d.remove(), duration * 1000);
+}
+
+// lluvia lenta
+setInterval(() => {
+  crearDalia();
+}, 500);
+
+// toque pantalla
+window.addEventListener('click', (e) => {
+  const x = (e.clientX / window.innerWidth) * 100;
+  for (let i = 0; i < 12; i++) {
+    crearDalia(x);
+  }
+
+  // iniciar música (por bloqueo de autoplay)
+  const audio = document.getElementById('musica');
+  audio.play();
+});
+
+// iniciar texto
+escribir();
+</script>
+
+</body>
+</html>
